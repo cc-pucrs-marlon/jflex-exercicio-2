@@ -11,8 +11,8 @@ public class AsdrSample {
   public static final int INT 	 = 305;
   public static final int BOOL	 = 306;
   public static final int DOUBLE = 307;
-  public static final int ELSE = 308;
-
+  public static final int ELSE   = 308;
+ 
     public static final String tokenList[] = {"IDENT",
 											  "NUM", 
 											  "WHILE", 
@@ -38,7 +38,7 @@ public class AsdrSample {
 
   private void Prog() {
     
-     if ( laToken == INT || laToken == DOUBLE || laToken == '{'  ) { 
+     if ( laToken == INT || laToken == DOUBLE || laToken == BOOL ||laToken == '{'  ) { 
             if (debug) System.out.println("Prog --> Decl Bloco");
      		LDecl();
      		Bloco();
@@ -47,7 +47,7 @@ public class AsdrSample {
     }
 
   private void LDecl() {
-     if (laToken == INT || laToken == DOUBLE ) {
+     if (laToken == INT || laToken == DOUBLE || laToken == BOOL ) {
      		if (debug) System.out.println("LDecl --> Decl LDecl");
             Decl();
      		LDecl();
@@ -86,7 +86,10 @@ public class AsdrSample {
 	   } else if (laToken == DOUBLE) {
          if (debug) System.out.println("Tipo --> double");
          verifica(DOUBLE);
-	   } else yyerror("Esperado: int ou double");
+	   } else if (laToken == BOOL) {
+         if (debug) System.out.println("Tipo --> bool");
+         verifica(BOOL);
+        }else yyerror("Esperado: int ou double");
    }
 	
   private void Bloco() {

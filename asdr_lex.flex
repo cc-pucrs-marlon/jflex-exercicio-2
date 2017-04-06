@@ -30,6 +30,7 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 "while"	 	{ return AsdrSample.WHILE; }
 "if"		{ return AsdrSample.IF; }
 "else"		{ return AsdrSample.ELSE; }
+"bool"		{ return AsdrSample.BOOL; }
 
 [:jletter:][:jletterdigit:]* { return AsdrSample.IDENT; }  
 
