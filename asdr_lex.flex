@@ -1,4 +1,4 @@
-
+/* Alunos: Marlon Baptista, Eurico Saldanha, Daniel Lopes */
 %%
 
 %{
@@ -10,9 +10,7 @@
     this(r);
     this.yyparser = yyparser;
   }
-
-
-%} 
+%}
 
 %integer
 %line
@@ -20,7 +18,7 @@
 
 WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 
-%% 
+%%
 
 "$TRACE_ON"   { yyparser.setDebug(true); }
 "$TRACE_OFF"  { yyparser.setDebug(false); }
@@ -28,11 +26,13 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 "int" 		{ return AsdrSample.INT; }
 "double"	{ return AsdrSample.DOUBLE; }
 "while"	 	{ return AsdrSample.WHILE; }
-"if"		{ return AsdrSample.IF; }
+"if"		  { return AsdrSample.IF; }
 "else"		{ return AsdrSample.ELSE; }
 "bool"		{ return AsdrSample.BOOL; }
+"FUNCT"   { return AsdrSample.FUNCT; }
+"VOID"   { return AsdrSample.VOID; }
 
-[:jletter:][:jletterdigit:]* { return AsdrSample.IDENT; }  
+[:jletter:][:jletterdigit:]* { return AsdrSample.IDENT; }
 
 [0-9]+ 	{ return AsdrSample.NUM; }
 
@@ -44,14 +44,9 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 "(" |
 ")" |
 "+" |
-"="    	{ return yytext().charAt(0); } 
+"="    	{ return yytext().charAt(0); }
 
 
 {WHITE_SPACE_CHAR}+ { }
 
 . { System.out.println("Erro lexico: caracter invalido: <" + yytext() + ">"); }
-
-
-
-
-

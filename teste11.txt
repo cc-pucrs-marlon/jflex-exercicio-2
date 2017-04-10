@@ -1,0 +1,3 @@
+$TRACE_ON
+
+FUNCT int soma(int b, int a) {b = 23;}

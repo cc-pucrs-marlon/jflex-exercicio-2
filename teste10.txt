@@ -1,0 +1,4 @@
+$TRACE_ON
+
+int a;
+FUNCT int soma(int b) { while (b) a= 34; }

@@ -1,5 +1,4 @@
 $TRACE_ON
 
-    int a, b  { while (b) a= 34; }
-   
-
+    int a, b;
+    FUNCT VOID Attr() { a = 34; }

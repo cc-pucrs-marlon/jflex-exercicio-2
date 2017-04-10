@@ -1,27 +1,36 @@
 import java.io.*;
 
+/*
+* Alunos: Marlon Baptista, Eurico Saldanha, Daniel Lopes
+*/
+
 public class AsdrSample {
 
   private static final int BASE_TOKEN_NUM = 301;
-  
+
   public static final int IDENT  = 301;
   public static final int NUM 	 = 302;
   public static final int WHILE  = 303;
-  public static final int IF	 = 304;
+  public static final int IF	   = 304;
   public static final int INT 	 = 305;
   public static final int BOOL	 = 306;
   public static final int DOUBLE = 307;
   public static final int ELSE   = 308;
- 
+  public static final int FUNCT  = 309;
+  public static final int VOID  = 310;
+
     public static final String tokenList[] = {"IDENT",
-											  "NUM", 
-											  "WHILE", 
-											  "IF", 
-									          "INT",
-									          "BOOL",
-									          "DOUBLE",
-                                              "ELSE"  };
-                                      
+                      											  "NUM",
+                      											  "WHILE",
+                      											  "IF",
+                  									          "INT",
+                  									          "BOOL",
+                  									          "DOUBLE",
+                                              "ELSE",
+                                              "FUNCT",
+                                              "VOID"
+                                              };
+
   /* referencia ao objeto Scanner gerado pelo JFLEX */
   private Yylex lexer;
 
@@ -30,37 +39,79 @@ public class AsdrSample {
   private static int laToken;
   private boolean debug;
 
-  
+
   /* construtor da classe */
   public AsdrSample (Reader r) {
       lexer = new Yylex (r, this);
   }
 
   private void Prog() {
-    
-     if ( laToken == INT || laToken == DOUBLE || laToken == BOOL ||laToken == '{'  ) { 
-            if (debug) System.out.println("Prog --> Decl Bloco");
+     if ( laToken == INT || laToken == DOUBLE || laToken == BOOL || laToken == FUNCT) {
+            if (debug) System.out.println("Prog --> Decl ListaFuncoes");
      		LDecl();
-     		Bloco();
+        ListaFuncoes();
      }
-     else yyerror("Esperado: int, double ou {");
+     else yyerror("Esperado: int, double, bool, FUNCT");
+    }
+
+    private void ListaFuncoes() {
+      if (laToken == FUNCT){
+        if (debug) System.out.println("ListaFuncoes --> umaFuncao ListaFuncoes");
+        Funct();
+        ListaFuncoes();
+      }else{
+          if (debug) System.out.println("ListaFuncoes -->       // prod. vazia");
+      }
+    }
+
+    private void Funct() {
+  	 if (debug) System.out.println("FUNCT --> FUNCT tipo IDENT () Bloco;");
+     verifica(FUNCT);
+  	 TipoOuVoid();
+     verifica(IDENT);
+  	 verifica('(');
+     ListaParametros();
+     verifica(')');
+     Bloco();
+    }
+
+    private void ListaParametros() {
+      if (debug) System.out.println("ListaParametros --> Tipo IDENT");
+      if(laToken == INT || laToken == DOUBLE || laToken == BOOL){
+        Tipo();
+        verifica(IDENT);
+        RestoListaParametros();
+      }else{
+        if (debug) System.out.println("ListaParametros -->       // prod. vazia");
+      }
+    }
+
+    private void RestoListaParametros() {
+       if (laToken == ',' ) {
+  	    if (debug) System.out.println("RestoListaParametros --> , Tipo IDENT");
+          verifica(',');
+          Tipo();
+          verifica(IDENT);
+          RestoListaParametros();
+       } else
+            if (debug) System.out.println("RestoListaParametros --> vazio");
     }
 
   private void LDecl() {
      if (laToken == INT || laToken == DOUBLE || laToken == BOOL ) {
      		if (debug) System.out.println("LDecl --> Decl LDecl");
-            Decl();
+        Decl();
      		LDecl();
      } else {
-             if (debug) System.out.println("LDecl -->       // prod. vazia");
-            }
+        if (debug) System.out.println("LDecl -->       // prod. vazia");
+     }
   }
 
   private void Decl() {
 	 if (debug) System.out.println("Decl --> Tipo ListaID ;");
-	 Tipo();
+	   Tipo();
      ListaID();
-	 verifica(';');
+	   verifica(';');
   }
 
   private void ListaID(){
@@ -79,7 +130,7 @@ public class AsdrSample {
           if (debug) System.out.println("RestoLID --> vazio");
   }
 
-  private void Tipo() { 
+  private void Tipo() {
       if (laToken == INT) {
          if (debug) System.out.println("Tipo --> int");
          verifica(INT);
@@ -89,9 +140,25 @@ public class AsdrSample {
 	   } else if (laToken == BOOL) {
          if (debug) System.out.println("Tipo --> bool");
          verifica(BOOL);
-        }else yyerror("Esperado: int ou double");
+       }else yyerror("Esperado: int, double ou bool");
    }
-	
+
+   private void TipoOuVoid(){
+     if (laToken == INT) {
+        if (debug) System.out.println("TipoOuVoid --> int");
+        verifica(INT);
+     } else if (laToken == DOUBLE) {
+        if (debug) System.out.println("TipoOuVoid --> double");
+        verifica(DOUBLE);
+     } else if (laToken == BOOL) {
+        if (debug) System.out.println("TipoOuVoid --> bool");
+        verifica(BOOL);
+     } else if (laToken == VOID){
+       if (debug) System.out.println("TipoOuVoid --> VOID");
+       verifica(VOID);
+     } else yyerror("Esperado: int, double, bool ou VOID");
+   }
+
   private void Bloco() {
       if (debug) System.out.println("Bloco --> { Cmd }");
 
@@ -104,10 +171,10 @@ public class AsdrSample {
       if (laToken == '{') {
          if (debug) System.out.println("Cmd --> Bloco");
          Bloco();
-	   }    
+	   }
       else if (laToken == WHILE) {
          if (debug) System.out.println("Cmd --> WHILE ( E ) Cmd");
-         verifica(WHILE);    // laToken = this.yylex(); 
+         verifica(WHILE);    // laToken = this.yylex();
   		 verifica('(');
   		 E();
          verifica(')');
@@ -138,10 +205,10 @@ public class AsdrSample {
          if (debug) System.out.println("RestoIF --> else Cmd ");
          verifica(ELSE);
          Cmd();
-	   } else { 
+	   } else {
          if (debug) System.out.println("RestoIF -->     // producao vazia");
          }
-     }     
+     }
 
 
 
@@ -157,7 +224,7 @@ public class AsdrSample {
       else if (laToken == '(') {
          if (debug) System.out.println("E --> ( E )");
          verifica('(');
-         E();        
+         E();
 		 verifica(')');
 	   }
  	else yyerror("Esperado operando (, identificador ou numero");
@@ -167,12 +234,12 @@ public class AsdrSample {
       if (laToken == expected)
          laToken = this.yylex();
       else {
-         String expStr, laStr;       
+         String expStr, laStr;
 
 		expStr = ((expected < BASE_TOKEN_NUM )
                 ? ""+(char)expected
 			     : tokenList[expected-BASE_TOKEN_NUM]);
-         
+
 		laStr = ((laToken < BASE_TOKEN_NUM )
                 ? new Character((char)laToken).toString()
                 : tokenList[laToken-BASE_TOKEN_NUM]);
@@ -191,7 +258,7 @@ public class AsdrSample {
        } catch (IOException e) {
            System.err.println("IO Error:" + e);
           }
-       return retVal; //retorna o token para o Parser 
+       return retVal; //retorna o token para o Parser
    }
 
   /* metodo de manipulacao de erros de sintaxe */
@@ -200,7 +267,7 @@ public class AsdrSample {
      System.err.println("Entrada rejeitada");
      System.out.println("\n\nFalhou!!!");
      System.exit(1);
-     
+
   }
 
   public void setDebug(boolean trace) {
@@ -223,18 +290,18 @@ public class AsdrSample {
      try {
          if (args.length == 0)
             parser = new AsdrSample(new InputStreamReader(System.in));
-         else 
+         else
             parser = new  AsdrSample( new java.io.FileReader(args[0]));
 
           parser.setDebug(false);
-          laToken = parser.yylex();          
+          laToken = parser.yylex();
 
           parser.Prog();
-     
+
           if (laToken== Yylex.YYEOF)
              System.out.println("\n\nSucesso!");
-          else     
-             System.out.println("\n\nFalhou - esperado EOF.");               
+          else
+             System.out.println("\n\nFalhou - esperado EOF.");
 
         }
         catch (java.io.FileNotFoundException e) {
@@ -248,8 +315,7 @@ public class AsdrSample {
 //          System.out.println("Unexpected exception:");
 //          e.printStackTrace();
 //      }
-    
-  }
-  
-}
 
+  }
+
+}
