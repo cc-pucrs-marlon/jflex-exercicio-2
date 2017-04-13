@@ -1,0 +1,4 @@
+$TRACE_ON
+
+    data prova p1 (123-4, 7.9)(212-4, 8,9)
+    data bonus t1 (123-4, 0.5)
