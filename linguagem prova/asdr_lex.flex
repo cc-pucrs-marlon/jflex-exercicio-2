@@ -23,7 +23,6 @@ WHITE_SPACE_CHAR=[\n\r\ \t\b\012]
 "$TRACE_ON"   { yyparser.setDebug(true); }
 "$TRACE_OFF"  { yyparser.setDebug(false); }
 
-"num" 		{ return AsdrSample.NUM; }
 "data"	{ return AsdrSample.DATA; }
 "prova"	 	{ return AsdrSample.PROVA; }
 [0-9][0-9][0-9]\-[0-9]		  { return AsdrSample.MATR; }

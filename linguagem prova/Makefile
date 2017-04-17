@@ -15,12 +15,12 @@ AsdrSample.class: AsdrSample.java Yylex.java
 Yylex.java: asdr_lex.flex
 	$(JFLEX) asdr_lex.flex
 
-	# Exemplos corretos:
-	# teste01.txt
-	# teste02.txt
-	# teste03.txt
-	# teste04.txt
-	# teste05.txt
+# Exemplos corretos:
+# teste01.txt
+# teste02.txt
+# teste03.txt
+# teste04.txt
+# teste05.txt
 
 test:
 	$(JAVARUN) AsdrSample teste01.txt
