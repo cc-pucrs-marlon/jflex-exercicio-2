@@ -1,2 +1,2 @@
-# jflex-exercicio-2
-## Alunos: Marlon Baptista, Eurico Saldanha, Daniel Lopes 
+# Analisador Léxico e Sintático para linguagem similar a Java
+## Alunos: Marlon Baptista, Eurico Saldanha, Daniel Lopes

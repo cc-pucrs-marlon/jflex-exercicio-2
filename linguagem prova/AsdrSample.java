@@ -48,10 +48,13 @@ public class AsdrSample {
   private void RESTOARQ(){
     if(laToken == DATA){
       if(debug) System.out.println("RESTOARQ --> data CAB DADOS");
+      verifica(DATA);
+      CAB();
+      DADOS();
       RESTOARQ();
     }else{
-          if (debug) System.out.println("ARQ -->       // prod. vazia");
-      }
+        if (debug) System.out.println("RESTOARQ -->       // prod. vazia");
+    }
   }
 
   private void CAB(){
@@ -82,10 +85,14 @@ public class AsdrSample {
   private void RESTODADOS(){
     if ( laToken == '(' ){
       if(debug) System.out.println("RESTODADOS --> ( matr , num )");
-      DADOS();
+      verifica('(');
+      verifica(MATR);
+      verifica(',');
+      verifica(NUM);
+      verifica(')');
       RESTODADOS();
     }else{
-          if (debug) System.out.println("DADOS -->       // prod. vazia");
+          if (debug) System.out.println("RESTODADOS -->       // prod. vazia");
       }
   }
 
