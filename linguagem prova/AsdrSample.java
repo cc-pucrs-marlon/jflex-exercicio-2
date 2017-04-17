@@ -47,7 +47,7 @@ public class AsdrSample {
 
   private void RESTOARQ(){
     if(laToken == DATA){
-      if(debug) System.out.println("RESTOARQ --> data CAB DADOS");
+      if(debug) System.out.println("RESTOARQ --> data CAB DADOS RESTOARQ");
       verifica(DATA);
       CAB();
       DADOS();
@@ -84,7 +84,7 @@ public class AsdrSample {
 
   private void RESTODADOS(){
     if ( laToken == '(' ){
-      if(debug) System.out.println("RESTODADOS --> ( matr , num )");
+      if(debug) System.out.println("RESTODADOS --> ( matr , num ) RESTODADOS");
       verifica('(');
       verifica(MATR);
       verifica(',');
